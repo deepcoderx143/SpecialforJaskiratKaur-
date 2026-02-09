@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do You Love Me? ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffe6e6; /* Soft Pink Background */
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        /* GIF Styling */
+        .gif-container img {
+            width: 180px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #ff4d6d;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        /* BUTTONS */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            height: 60px; /* Space for movement */
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .yes-btn {
+            background-color: #ff4d6d;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.1);
+            background-color: #ff2a55;
+        }
+
+        .no-btn {
+            background-color: white;
+            color: #ff4d6d;
+            border: 2px solid #ff4d6d;
+        }
+
+        /* HIDDEN SECTIONS */
+        .hidden { display: none; }
+
+        /* FINAL MESSAGE STYLE */
+        .final-msg {
+            color: #ff4d6d;
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* PHOTO GALLERY (Added your photos at the end) */
+        .photo-gallery {
+            display: none;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .photo-gallery img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #ff4d6d;
+            animation: popIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainCard">
+        <div class="gif-container">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z5Y2ZqYmF6bXZ2aG85aG9uaGF6bXZ2aG85aG9uYiZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Asking Bear">
+        </div>
+        
+        <h1>Do you love me? 🥺</h1>
+        
+        <div class="btn-group">
+            <button class="yes-btn" onclick="acceptLove()">Yes ❤️</button>
+            <button class="no-btn" id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No 💔</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="successCard">
+        <div class="gif-container">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z5Y2ZqYmF6bXZ2aG85aG9uaGF6bXZ2aG85aG9uYiZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/T86i6yDyOYz7J6dPhf/giphy.gif" alt="Hugging Bears">
+        </div>
+        
+        <div class="final-msg">I knew it! 😍</div>
+        <p style="color: #666;">Happy Valentine's Day! 🌹</p>
+
+        <div class="photo-gallery" id="gallery">
+            <img src="/03.gif" style="animation-delay: 0.2s">
+            <img src="/02.gif" style="animation-delay: 0.4s">
+            <img src="/01.gif" style="animation-delay: 0.6s">
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const mainCard = document.getElementById('mainCard');
+        const successCard = document.getElementById('successCard');
+        const gallery = document.getElementById('gallery');
+
+        // 1. RUNAWAY NO BUTTON
+        function moveButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 50);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 50);
+            
+            noBtn.style.position = 'fixed'; // Make it float freely
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+        }
+
+        // 2. SUCCESS LOGIC
+        function acceptLove() {
+            mainCard.style.display = 'none'; // Hide Question
+            successCard.style.display = 'block'; // Show Celebration
+            gallery.style.display = 'flex'; // Show Photos
+
+            // Confetti Blast
+            const duration = 3000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff4d6d', '#ffccd5']
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff4d6d', '#ffccd5']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+    </script>
+</body>
+</html>
